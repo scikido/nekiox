@@ -14,7 +14,7 @@ import time
 import textwrap
 import gradio as gr
 
-loader = PyMuPDFLoader(r"potest.pdf")
+loader = PyMuPDFLoader(r"po_test.pdf")
 text = loader.load()
 
 
