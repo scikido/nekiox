@@ -1,63 +1,54 @@
-from langchain_groq import ChatGroq
-from langchain_community.document_loaders import TextLoader, PyPDFDirectoryLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
-# from langchain_community import embeddings
-from langchain_community.document_loaders import PyMuPDFLoader
-from langchain_core.prompts import ChatPromptTemplate
-# from langchain_core.runnables import RunnablePassthrough
-# from langchain_core.output_parsers import StrOutputParser
-# from google.colab import userdata
+import streamlit as st 
 import os
-from dotenv import load_dotenv
-import time
-import textwrap
-import gradio as gr
-
-loader = PyMuPDFLoader(r"po_test.pdf")
-text = loader.load()
+import base64
+from qna import * 
+from pathlib import Path
+from csvfile import *
+from llamaparser import *
 
 
+def get_file_size(file):
+    file.seek(0, os.SEEK_END)
+    file_size = file.tell()
+    file.seek(0)
+    return file_size
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 
-chunks = text_splitter.split_documents(text)
+def main():
+    uploaded_file = st.file_uploader("Upload PDF here", type=["pdf"])
 
-from transformers import AutoModel
-from langchain.embeddings import HuggingFaceEmbeddings
+    if uploaded_file is not None:
+        file_details = {
+            "Filename": uploaded_file.name,
+            "File size": get_file_size(uploaded_file)
+        }
+        filepath = ""+uploaded_file.name
+        with open(filepath, "wb") as temp_file:
+                temp_file.write(uploaded_file.read())
+        
+        # save_folder = 'docs/'
+        # save_path = Path(save_folder, uploaded_file.name)
+        # with open(save_path, mode='wb') as w:
+        #     w.write(uploaded_file.getvalue())
+        
+        text  = parse_using_llama(uploaded_file.name)
+        print("text extracted!")
+        vectorstore, llm = processing_embedding(text)
+        print("Vectorstore and LLM created!")
+        st.write(text)
+        
 
-model_name = "sentence-transformers/all-mpnet-base-v2"
-model_kwargs = {"device": "cpu"}
+        with st.sidebar:
+            messages = st.container(height=300)
+            if prompt := st.chat_input("Say something"):
+                messages.chat_message("user").write(prompt)
+                answer = answer_question(vectorstore, llm, prompt)
+                messages.chat_message("assistant").write(f"Echo: {answer}")
 
-embeddings_hf = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
+            pdf_to_csv(uploaded_file.name)
+            with open('output.csv') as f:
+                st.download_button('Download CSV', f)
 
-vectorstore = Chroma.from_documents(
-    documents = chunks,
-    collection_name= "groq_embeds",
-    embedding = embeddings_hf,
-)
 
-retriever = vectorstore.as_retriever()
-load_dotenv()
-#from google.colab import userdata
-import os
-from langchain_groq import ChatGroq
-
-groq_api_key = os.environ['GROQ_API_KEY']
-llm = ChatGroq(temperature=0, model_name = "mixtral-8x7b-32768" )
-
-from langchain.chains import RetrievalQA
-
-rag_template = """Answer the question based only on the following context:
-{context}
-Question: {question}
-"""
-
-rag_prompt = ChatPromptTemplate.from_template(rag_template)
-qa_chain = RetrievalQA.from_chain_type(
-    llm, retriever=vectorstore.as_retriever(), chain_type_kwargs={"prompt": rag_prompt},
-)
-
-response = qa_chain.invoke("Extract all the data from the given text and display it in a proper format.")
-
-print(response['result'])
+if __name__ == "__main__":
+    main()
