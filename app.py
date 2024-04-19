@@ -14,7 +14,7 @@ import time
 import textwrap
 import gradio as gr
 
-loader = PyMuPDFLoader(r"C:\Users\DELL\Downloads\app\IPL-Winners-List-2008-2022.pdf")
+loader = PyMuPDFLoader(r"potest.pdf")
 text = loader.load()
 
 
