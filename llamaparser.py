@@ -1,4 +1,5 @@
 from llama_parse import LlamaParse
+import streamlit as st
 import time
 
 def parse_using_llama(pdf):
@@ -13,16 +14,14 @@ def parse_using_llama(pdf):
     documents = parser.load_data(pdf)
     return documents[0].text
 
-def main():
-    start_time = time.time()  # Start measuring time
 
-    docs_text = parse_using_llama(r"po_test.pdf")
-    print(docs_text)
 
-    end_time = time.time()  # Stop measuring time
-    execution_time = end_time - start_time
-    print(f"Execution time: {execution_time} seconds")
 
-# Invoking the main function
-if __name__ == "__main__":
-    main()
+# def main():
+#     # docs_text = parse_using_llama(r"C:\Users\DELL\Downloads\table extract\aoc_3938_18_03_2020.pdf")
+#     # print(docs_text)
+
+
+# # Invoking the main function
+# if __name__ == "__main__":
+#     main()

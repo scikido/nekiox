@@ -57,7 +57,7 @@ def processing_embedding(text):
 
 
 def answer_question(vectorstore, llm, question):
-    rag_template = """Use the following context to create json:
+    rag_template = """Use the following context to create json and do not write anything except json format:
     {context}
     Question: {question}
     """
@@ -71,14 +71,14 @@ def answer_question(vectorstore, llm, question):
     # Get two responses with embeddings
 
     embeddings_hf = model_embedding()
-    response_1 = qa_chain.invoke(question + "precisely")
-    # response_1_embedding = embeddings_hf.embed_query(response_1)
+    response = qa_chain.invoke(question + "accurately")
+    # # response_1_embedding = embeddings_hf.embed_query(response_1)
 
-    # # Retrieve nearest neighbors or embeddings associated with specific documents
-    # nearest_neighbors_1, distances_1 = vectorstore.find_nearest_neighbors(response_1_embedding, k=5)
+    # # # Retrieve nearest neighbors or embeddings associated with specific documents
+    # # nearest_neighbors_1, distances_1 = vectorstore.find_nearest_neighbors(response_1_embedding, k=5)
 
-    response_2 = qa_chain.invoke(question + "precisely")
-    # response_2_embedding = embeddings_hf.embed_query(response_2)
-    # nearest_neighbors_2, distances_2 = vectorstore.find_nearest_neighbors(response_2_embedding, k=5)
+    # response_2 = qa_chain.invoke(question + "give all relevant data in json format")
+    # # response_2_embedding = embeddings_hf.embed_query(response_2)
+    # # nearest_neighbors_2, distances_2 = vectorstore.find_nearest_neighbors(response_2_embedding, k=5)
 
-    return response_1,  response_2
+    return response
