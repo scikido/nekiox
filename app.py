@@ -3,8 +3,8 @@ import os
 import base64
 from qna import * 
 from pathlib import Path
-from csvfile import *
 from llamaparser import *
+from rl import *
 
 
 def get_file_size(file):
@@ -15,6 +15,7 @@ def get_file_size(file):
 
 
 def main():
+    st.set_page_config(layout="wide")
     uploaded_file = st.file_uploader("Upload PDF here", type=["pdf"])
 
     if uploaded_file is not None:
@@ -33,22 +34,40 @@ def main():
         
         text  = parse_using_llama(uploaded_file.name)
         print("text extracted!")
-        vectorstore, llm = processing_embedding(text)
+        vectorstore, llm, embeddings_hf = processing_embedding(text)
         print("Vectorstore and LLM created!")
-        st.write(text)
+        response_1, response_2 = answer_question(vectorstore, llm, "Give all the data in json format")
         
+        col1, col2, col3 = st.columns(3)
 
-        with st.sidebar:
-            messages = st.container(height=300)
-            if prompt := st.chat_input("Say something"):
-                messages.chat_message("user").write(prompt)
-                answer = answer_question(vectorstore, llm, prompt)
-                messages.chat_message("assistant").write(f"Echo: {answer}")
+        with col1:
+            st.write(response_1)
 
-            pdf_to_csv(uploaded_file.name)
-            with open('output.csv') as f:
-                st.download_button('Download CSV', f)
+        with col2:
+            st.write(response_2)
 
+        with col3:
+            genre = st.radio(
+                "Which response is better (1/2)?",
+                ["1", "2"], index=None)
+            
+            with open("response1.json", 'w') as f:
+                f.write(str(response_1))
 
+            with open("response2.json", 'w') as f:
+                f.write(str(response_2))
+
+            # st.download_button(
+            # label="Download Response 1",
+            # data= response1.json,
+            # file_name='response1.json')
+
+            # st.download_button(
+            # label="Download Response 2",
+            # data=response2.json,
+            # file_name='response2.json')
+            if genre:
+                reinforcement(text, genre)
+        
 if __name__ == "__main__":
     main()
