@@ -562,11 +562,9 @@ strictyaml==1.7.3
 striprtf==0.0.26
 svgwrite==1.4.3
 sympy==1.12
-tables @ file:///C:/b/abs_0626auep9v/croot/pytables_1691623892917/work
 tabula-py==2.9.0
 tabulate==0.9.0
 TBB==0.2
-tblib @ file:///Users/ktietz/demo/mc3/conda-bld/tblib_1629402031467/work
 tenacity==8.2.3
 tensorboard==2.15.1
 tensorboard-data-server==0.7.2
@@ -575,72 +573,32 @@ tensorflow-estimator==2.15.0
 tensorflow-intel==2.15.0
 tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.4.0
-terminado @ file:///C:/ci_311/terminado_1678228513830/work
-text-unidecode @ file:///Users/ktietz/demo/mc3/conda-bld/text-unidecode_1629401354553/work
-textdistance @ file:///tmp/build/80754af9/textdistance_1612461398012/work
-threadpoolctl @ file:///Users/ktietz/demo/mc3/conda-bld/threadpoolctl_1629802263681/work
-three-merge @ file:///tmp/build/80754af9/three-merge_1607553261110/work
-tifffile @ file:///C:/b/abs_45o5chuqwt/croot/tifffile_1695107511025/work
 tiktoken==0.6.0
 timm==0.9.16
-tinycss2 @ file:///C:/ci_311/tinycss2_1676425376744/work
-tldextract @ file:///opt/conda/conda-bld/tldextract_1646638314385/work
 tokenizers==0.15.0
-toml @ file:///tmp/build/80754af9/toml_1616166611790/work
 tomlkit==0.12.0
-toolz @ file:///C:/ci_311/toolz_1676431406517/work
 torch==2.1.2
 torchvision==0.16.2
-tornado @ file:///C:/b/abs_61jhmrrua1/croot/tornado_1690848767317/work
 tqdm==4.66.2
-traitlets @ file:///C:/ci_311/traitlets_1676423290727/work
 transformers==4.39.3
 trl==0.8.5
-Twisted @ file:///C:/b/abs_f1pc_rieoy/croot/twisted_1683796899561/work
-twisted-iocpsupport @ file:///C:/ci_311/twisted-iocpsupport_1676447612160/work
 typer==0.12.3
 types-pytz==2024.1.0.20240203
 types-requests==2.31.0.20240406
 typing-inspect==0.9.0
 typing_extensions==4.11.0
 tyro==0.8.3
-tzdata @ file:///croot/python-tzdata_1690578112552/work
-tzlocal @ file:///C:/ci_311/tzlocal_1676439620276/work
-uc-micro-py @ file:///C:/ci_311/uc-micro-py_1676457695423/work
-ujson @ file:///C:/ci_311/ujson_1676434714224/work
-Unidecode @ file:///tmp/build/80754af9/unidecode_1614712377438/work
-urllib3 @ file:///C:/b/abs_889_loyqv4/croot/urllib3_1686163174463/work
 uvicorn==0.29.0
-validators @ file:///tmp/build/80754af9/validators_1612286467315/work
 virtualenv==20.25.1
-w3lib @ file:///Users/ktietz/demo/mc3/conda-bld/w3lib_1629359764703/work
-watchdog @ file:///C:/ci_311/watchdog_1676457923624/work
 watchfiles==0.21.0
-wcwidth @ file:///Users/ktietz/demo/mc3/conda-bld/wcwidth_1629357192024/work
 weasyprint==61.2
 webencodings==0.5.1
-websocket-client @ file:///C:/ci_311/websocket-client_1676426063281/work
 websockets==11.0.3
 Werkzeug==3.0.1
-whatthepatch @ file:///C:/ci_311/whatthepatch_1678402578113/work
-widgetsnbextension @ file:///C:/b/abs_882k4_4kdf/croot/widgetsnbextension_1679313880295/work
 wikipedia==1.4.0
 Wikipedia-API==0.6.0
-win-inet-pton @ file:///C:/ci_311/win_inet_pton_1676425458225/work
 word2number==1.1
 wordcloud==1.9.3
-wrapt @ file:///C:/ci_311/wrapt_1676432805090/work
-xarray @ file:///C:/b/abs_5bkjiynp4e/croot/xarray_1689041498548/work
-xlwings @ file:///C:/ci_311_rebuilds/xlwings_1679013429160/work
-xxhash @ file:///C:/ci_311/python-xxhash_1676446168786/work
-xyzservices @ file:///C:/ci_311/xyzservices_1676434829315/work
-y-py @ file:///C:/b/abs_b7f5go6r0j/croot/y-py_1683662173571/work
-yapf @ file:///tmp/build/80754af9/yapf_1615749224965/work
-yarl @ file:///C:/ci_311/yarl_1676432870023/work
 yfinance==0.2.38
-ypy-websocket @ file:///C:/b/abs_4e65ywlnv8/croot/ypy-websocket_1684172103529/work
-zict @ file:///C:/b/abs_fc7elavmem/croot/zict_1682698759288/work
-zipp @ file:///C:/ci_311/zipp_1676426100491/work
-zope.interface @ file:///C:/ci_311/zope.interface_1676439868776/work
 zopfli==0.2.3
 zstandard==0.19.0
