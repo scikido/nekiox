@@ -8,56 +8,77 @@ from langchain_core.prompts import ChatPromptTemplate
 # from langchain_core.runnables import RunnablePassthrough
 # from langchain_core.output_parsers import StrOutputParser
 # from google.colab import userdata
+from transformers import AutoModel
+from langchain.embeddings import HuggingFaceEmbeddings
 import os
 from dotenv import load_dotenv
 import time
 import textwrap
 import gradio as gr
-
-loader = PyMuPDFLoader(r"po_test.pdf")
-text = loader.load()
-
-
-
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-
-chunks = text_splitter.split_documents(text)
-
-from transformers import AutoModel
-from langchain.embeddings import HuggingFaceEmbeddings
-
-model_name = "sentence-transformers/all-mpnet-base-v2"
-model_kwargs = {"device": "cpu"}
-
-embeddings_hf = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
-
-vectorstore = Chroma.from_documents(
-    documents = chunks,
-    collection_name= "groq_embeds",
-    embedding = embeddings_hf,
-)
-
-retriever = vectorstore.as_retriever()
-load_dotenv()
-#from google.colab import userdata
+from langchain.chains import RetrievalQA
 import os
 from langchain_groq import ChatGroq
 
-groq_api_key = os.environ['GROQ_API_KEY']
-llm = ChatGroq(temperature=0, model_name = "mixtral-8x7b-32768" )
+def model_embedding():
+    model_name = "sentence-transformers/all-mpnet-base-v2"
+    model_kwargs = {"device": "cpu"}
 
-from langchain.chains import RetrievalQA
+    embeddings_hf = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
 
-rag_template = """Answer the question based only on the following context:
-{context}
-Question: {question}
-"""
+    return embeddings_hf
 
-rag_prompt = ChatPromptTemplate.from_template(rag_template)
-qa_chain = RetrievalQA.from_chain_type(
-    llm, retriever=vectorstore.as_retriever(), chain_type_kwargs={"prompt": rag_prompt},
-)
+def processing_embedding(text):
+    # loader = PyMuPDFLoader(pdf)
+    # text = loader.load()
+    
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 
-response = qa_chain.invoke("Extract all the data from the given text and display it in a proper format.")
+    #chunks = text_splitter.split_documents(text)
+    pages = text_splitter.split_text(text)
+    chunks = text_splitter.create_documents(pages)
 
-print(response['result'])
+    embeddings_hf = model_embedding()
+
+    
+
+    vectorstore = Chroma.from_documents(
+        documents = chunks,
+        collection_name= "groq_embeds",
+        embedding = embeddings_hf,
+    )
+
+    retriever = vectorstore.as_retriever()
+    load_dotenv()
+
+
+    groq_api_key = os.environ['GROQ_API_KEY']
+    llm = ChatGroq(temperature=0, model_name = "mixtral-8x7b-32768" )
+    return vectorstore, llm, embeddings_hf
+
+
+def answer_question(vectorstore, llm, question):
+    rag_template = """Use the following context to create json:
+    {context}
+    Question: {question}
+    """
+
+    rag_prompt = ChatPromptTemplate.from_template(rag_template)
+    qa_chain = RetrievalQA.from_chain_type(
+        llm, retriever=vectorstore.as_retriever(), chain_type_kwargs={"prompt": rag_prompt},
+    )
+
+    # response = qa_chain.invoke("Extract all the data from the given text and display it in a proper format.")
+    # Get two responses with embeddings
+
+    embeddings_hf = model_embedding()
+    response_1 = qa_chain.invoke(question + "precisely")
+    # response_1_embedding = embeddings_hf.embed_query(response_1)
+
+    # # Retrieve nearest neighbors or embeddings associated with specific documents
+    # nearest_neighbors_1, distances_1 = vectorstore.find_nearest_neighbors(response_1_embedding, k=5)
+
+    response_2 = qa_chain.invoke(question + "precisely")
+    # response_2_embedding = embeddings_hf.embed_query(response_2)
+    # nearest_neighbors_2, distances_2 = vectorstore.find_nearest_neighbors(response_2_embedding, k=5)
+
+    return response_1,  response_2
